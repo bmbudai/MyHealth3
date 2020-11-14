@@ -31,11 +31,14 @@
                 header('Location: index.html');
             } else {
                 // Incorrect password
+                $_SESSION['badpassword'] = TRUE;
+                $_SESSION['nouser'] = FALSE;
                 header('Location: login.html');
             }
         } else {
             // Incorrect username
-            echo 'Incorrect username and/or password!';
+            $_SESSION['nouser'] = TRUE;
+            header('Location: login.html');
         }
 
         $stmt->close();
