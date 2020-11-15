@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Home - MyHealth</title>
+<title>Dashboard - MyHealth</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -15,6 +15,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </style>
 <body>
 
+<?php
+  session_start();
+  if (!isset($_SESSION['loggedin'])) {
+    header('Location: login.html');
+    $hideNotLoggedIn = "style='display:none;'";
+    exit;
+  }
+  else {
+    $username = $_SESSION["name"];
+  }
+?>
+
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar color1 w3-card w3-left-align w3-large">
@@ -24,6 +36,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 2</a>
     <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Link 3</a>
     <a href="credits.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Credits</a>
+    <button id="profile-button" class="w3-bar-item w3-button w3-padding-large w3-right" <?php echo $hideNotLoggedIn;?> onclick="profileButtons()" title="Manage your account">Profile</button>
+  </div>
+
+  <div id="profileMenu" class="w3-right w3-quarter w3-bar-block w3-white w3-hide w3-large">
+    <a href="logout.php" class="w3-bar-item w3-button w3-padding-large">Sign Out</a>
+    <a href="profile.html" class="w3-bar-item w3-button w3-padding-large">Account Info</a>
   </div>
 
   <!-- Navbar on small screens -->
@@ -37,10 +55,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <!-- Header -->
 <header class="w3-container color1 w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">Welcome to MyHealth!</h1>
-  <p class="w3-xlarge">Login to get started, or create an account.</p>
-  <a href="login.html" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Log In</a>
-  <a href="create-account.html" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Create Account</a>
+  <h1 class="w3-margin w3-jumbo">Welcome Back, <?php echo $username;?>!</h1>
 </header>
 
 <!-- First Grid -->
@@ -88,6 +103,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 // Used to toggle the menu on small screens when clicking on the menu button
 function myFunction() {
   var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else {
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+
+function profileButtons() {
+  var x = document.getElementById("profileMenu");
   if (x.className.indexOf("w3-show") == -1) {
     x.className += " w3-show";
   } else {

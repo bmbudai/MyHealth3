@@ -15,19 +15,46 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </style>
 <body>
 
-<!-- Navbar -->
-<div class="w3-top">
-  <div class="w3-bar color1 w3-card w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large color1" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="index.html" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-  </div>
-</div>
+<?php
+session_start();
+if ($_SESSION['usernameTaken']==TRUE) {
+  $authFailModalShow = "style='display:block;'";
+  $authFailReason = "The username '". $_SESSION['usernameAttempted'] ."' isn't available";
+  $_SESSION['usernameTaken']=FALSE;
+}
+else if ($_SESSION['passDontMatch']==TRUE){
+  $authFailModalShow = "style='display:block;'";
+  $authFailReason = "Your passwords don't match";
+  $_SESSION['passDontMatch']=FALSE;
+}
+else {
+  $authFailModalShow = "style='display:none;'";
+}
+?>
 
 <!-- Header -->
 <header class="w3-container color1 w3-center" style="padding:128px 16px">
   <h1 class="w3-margin w3-jumbo">Nice to meet you!</h1>
   <!-- <p class="w3-xlarge">Template by w3.css</p> -->
 </header>
+
+<!--Modal for if creating account failed-->
+<div id="authFailModal" class="w3-modal" <?php echo $authFailModalShow;?>>
+  <div class="w3-modal-content w3-animate-zoom w3-card-4">
+    <header class="w3-container color1">
+      <span onclick="document.getElementById('authFailModal').style.display='none'"
+      class="w3-button w3-display-topright">&times;</span>
+      <h2>Registration Failed</h2>
+    </header>
+    <div class="w3-container">
+      <p class="w3-xlarge"><?php echo $authFailReason;?></p>
+    </div>
+    <footer class="w3-container color1">
+      <p></p>
+    </footer>
+  </div>
+</div>
+
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
@@ -38,52 +65,54 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
           <h2>Personal Information</h2>
         </div>
 
-        <form class="w3-container">
-          <input class="w3-input" type="text">
-          <label>Username </label></p>
-          <input class="w3-input" type="text">
-          <label>First Name </label></p>
-          <input class="w3-input" type="text">
-          <label>Middle Name </label></p>
-          <input class="w3-input" type="text">
-          <label>Last Name </label></p>
-          <input class="w3-input" type="date">
-          <label>Date of Birth </label></p>
-          <input class="w3-input" type="text">
-          <label>Street Address </label></p>
+        <form class="w3-container" action="create-user.php" method="post">
+          <input class="w3-input" placeholder="Username" name="username"  type="text" required>
+          </p>
+          <input class="w3-input" placeholder="First Name" name="firstname"  type="text" required>
+          </p>
+          <input class="w3-input" placeholder="Middle Name" name="middlename"  type="text">
+          </p>
+          <input class="w3-input" placeholder="Last Name" name="lastname"  type="text" required>
+          </p>
+          <input class="w3-input" type="date" name="dateofbirth" required>
+          <label class="w3-text-grey">Date of Birth </label></p>
+          <input class="w3-input" placeholder="Street Address" name="streetaddress"  type="text" required>
+          </p>
 
-          <div class="w3-row-padding">
+          <div>
             <div class="w3-third">
-              <input class="w3-input" type="text">
-              <label>City </label></p>
+              <input class="w3-input" placeholder="City" name="city"  type="text" required>
+              </p>
+            </div>
+            <div class="w3-third w3-row-padding">
+              <input class="w3-input" placeholder="State (e.g. ID)" name="state"  type="text" required>
+              </p>
             </div>
             <div class="w3-third">
-              <input class="w3-input" type="text">
-              <label>State </label></p>
-            </div>
-            <div class="w3-third">
-              <input class="w3-input" type="number">
-              <label>Zip Code </label></p>
+              <input class="w3-input" placeholder="ZIP" name="zip"  type="number" required>
+              </p>
             </div>
           </div>
 
-          <input class="w3-input" type="tel">
-          <label>Phone Number </label></p>
-          <input class="w3-input" type="email">
-          <label>Email Address </label></p>
-          <input class="w3-input" type="text">
-          <label>Employer </label></p>
-          <input class="w3-input" type="tel">
-          <label>Emergency Contact Phone Number </label></p>
-          <input class="w3-input" type="password">
-          <label>Password</label></p>
-          <input class="w3-input" type="password">
-          <label>Confirm Password</label></p>
+          <input class="w3-input" placeholder="Phone" name="phone"  type="tel" required>
+          </p>
+          <input class="w3-input" placeholder="Email" name="email"  type="email" required>
+          </p>
+          <input class="w3-input" placeholder="Employer" name="employer"  type="text">
+          </p>
+          <input class="w3-input" placeholder="Emergency Contact Name" name="emergencycontactname"  type="text" required>
+          </p>
+          <input class="w3-input" placeholder="Emergency Contact Phone" name="emergencycontactphone"  type="tel" required>
+          </p>
+          <input class="w3-input" placeholder="Password" name="password"  type="password" required>
+          </p>
+          <input class="w3-input" placeholder="Confirm Password" name="confirmpassword"  type="password" required>
+          </p>
+          <p>
+          <button class="w3-button color1 w3-padding-large w3-large w3-margin-top" type="submit">Create Account</button>
+          <a href="login.html" class="w3-button color1 w3-padding-large w3-large w3-margin-top">Use Existing Account</a>
         </form>
       </div>
-
-      <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Create Account</button>
-      <a href="login.html" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Use Existing Account</a>
     </div>
 
   </div>
