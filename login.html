@@ -20,10 +20,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   if ($_SESSION['nouser']==TRUE) {
     $authFailModalShow = "style='display:block;'";
     $authFailReason = "There is no user with that username";
+    $_SESSION['nouser']=FALSE;
   }
   else if ($_SESSION['badpassword']==TRUE){
     $authFailModalShow = "style='display:block;'";
     $authFailReason = "Your password is incorrect";
+    $_SESSION['badpassword']=FALSE;
   }
   else {
     $authFailModalShow = "style='display:none;'";
@@ -57,8 +59,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-    <!-- <div class="w3-twothird"> -->
-
       <div class="w3-container">
         <div class="w3-card-4">
           <div class="w3-container color1">
@@ -78,26 +78,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
             <input class="w3-button color1 w3-padding-large w3-large w3-margin-top" type="submit" value="Login">
             <a href="create-account.html" class="w3-button color1 w3-padding-large w3-large w3-margin-top">Create Account</a>
             <p>
-
-          <!-- <form class="w3-container" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-            <p>
-            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-              <label>Username</label></p>
-              <input class="w3-input" type="text">
-              <span class="help-block"><?php echo $username_err; ?></span>
-            </div>
-            <p>
-              <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <label>Password</label></p>
-                <input class="w3-input" type="text">
-                <span class="help-block"><?php echo $password_err; ?></span>
-              </div>
-            <p>-->
           </form>
         </div>
       </div>
-
-    <!-- </div> -->
 
   </div>
 </div>
