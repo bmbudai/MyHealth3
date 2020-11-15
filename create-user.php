@@ -30,14 +30,38 @@
             //Everything must be dandy, let's move on
             $password = trim($_POST['password']);
             $username = trim($_POST['username']);
+            $firstname = trim($_POST['firstname']);
+            $middlename = trim($_POST['middlename']);
+            $lastname = trim($_POST['lastname']);
+            $streetaddress = trim($_POST['streetaddress']);
+            $city = trim($_POST['city']);
+            $state = trim($_POST['state']);
+            $zip = trim($_POST['zip']);
+            $dateofbirth = trim($_POST['dateofbirth']);
+            $phone = trim($_POST['phone']);
+            $email = trim($_POST['email']);
+            $employer = trim($_POST['employer']);
+            $emergencycontactname = trim($_POST['emergencycontactname']);
+            $emergencycontactphone = trim($_POST['emergencycontactphone']);
+
             // Set parameters
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
-            $insert = $link->prepare('insert into Users (username, password) values (?,?)');
-            $insert->bind_param("ss", $param_username, $param_password);
+            $insertUser = $link->prepare('insert into Users (username, password) values (?,?)');
+            $insertUser->bind_param("ss", $param_username, $param_password);
+
+            if(isset($middlename) && !empty($middlename)) {
+                $middlename = $middlename . ' ';
+            }
+            $name = $firstname . ' ' . $middlename .$lastname;
+
+            $address = $streetaddress . ', ' . $city . ' ' . $state . ' ' . $zip;
+
+            $insertPatient = $link->prepare('insert into Patients (Name, DateOfBirth, Address, EmployerName, EmergencyContactName, EmergencyContactTelNo, PatientTelNo, PatientEmail) values (?,?,?,?,?,?,?,?)');
+            $insertPatient->bind_param("ssssssss", $name, $dateofbirth, $address, $employer, $emergencycontactname, $emergencycontactphone, $phone, $email);
 
             // Attempt to execute the prepared statement
-            if($insert->execute()){
+            if($insertUser->execute() && $insertPatient->execute()){
                 // Redirect to login page
                 header("Location: login.html");
             } else{
