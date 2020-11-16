@@ -22,10 +22,10 @@
             // Someone already used this username.
             $_SESSION['usernameTaken'] = TRUE;
             $_SESSION['usernameAttempted'] = $_POST['username'];
-            header('Location: create-account.html');
+            header('Location: create-account.php');
         } else if ($_POST['password']!=$_POST['confirmpassword']){
             $_SESSION['passDontMatch'] = TRUE;
-            header('Location: create-account.html');
+            header('Location: create-account.php');
         } else {
             //Everything must be dandy, let's move on
             $password = trim($_POST['password']);
@@ -63,7 +63,7 @@
             // Attempt to execute the prepared statement
             if($insertUser->execute() && $insertPatient->execute()){
                 // Redirect to login page
-                header("Location: login.html");
+                header("Location: index.php");
             } else{
                 echo "Something went wrong. Please try again later.";
             }
