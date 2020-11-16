@@ -28,17 +28,18 @@
                 $_SESSION['loggedin'] = TRUE;
                 $_SESSION['name'] = $_POST['username'];
                 $_SESSION['id'] = $id;
-                header('Location: index.html');
+                header('Location: landing.php');
+
             } else {
                 // Incorrect password
                 $_SESSION['badpassword'] = TRUE;
                 $_SESSION['nouser'] = FALSE;
-                header('Location: login.html');
+                header('Location: index.php');
             }
         } else {
             // Incorrect username
             $_SESSION['nouser'] = TRUE;
-            header('Location: login.html');
+            header('Location: index.php');
         }
 
         $stmt->close();
