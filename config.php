@@ -7,9 +7,9 @@ define('DB_USERNAME', 'myhealth3');
 define('DB_PASSWORD', 'myhealthPass');
 define('DB_NAME', 'myhealth3');
 */
-define('DB_SERVER', '192.168.0.14');
+define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'myhealth3');
-define('DB_PASSWORD', 'myhealthPass');
+define('DB_PASSWORD', '2W,^SxWFfvAE');
 define('DB_NAME', 'myhealth3');
 
 
