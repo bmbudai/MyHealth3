@@ -47,8 +47,14 @@
             // Set parameters
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
-            $insertUser = $link->prepare('insert into Users (username, password) values (?,?)');
-            $insertUser->bind_param("ss", $param_username, $param_password);
+
+            $newidquery = mysqli_query($link,"SELECT MAX(id) as newid FROM Users");
+            $newidprep = mysqli_fetch_assoc($newidquery);
+            $newid = $newidprep["newid"];
+
+
+            $insertUser = $link->prepare('insert into Users (id, username, password) values (?,?,?)');
+            $insertUser->bind_param("dss", $newid, $param_username, $param_password);
 
             if(isset($middlename) && !empty($middlename)) {
                 $middlename = $middlename . ' ';
@@ -57,8 +63,8 @@
 
             $address = $streetaddress . ', ' . $city . ' ' . $state . ' ' . $zip;
 
-            $insertPatient = $link->prepare('insert into Patients (Name, DateOfBirth, Address, EmployerName, EmergencyContactName, EmergencyContactTelNo, PatientTelNo, PatientEmail) values (?,?,?,?,?,?,?,?)');
-            $insertPatient->bind_param("ssssssss", $name, $dateofbirth, $address, $employer, $emergencycontactname, $emergencycontactphone, $phone, $email);
+            $insertPatient = $link->prepare('insert into Patients (PatientId, Name, DateOfBirth, Address, EmployerName, EmergencyContactName, EmergencyContactTelNo, PatientTelNo, PatientEmail) values (?,?,?,?,?,?,?,?,?)');
+            $insertPatient->bind_param("dssssssss", $newid, $name, $dateofbirth, $address, $employer, $emergencycontactname, $emergencycontactphone, $phone, $email);
 
             // Attempt to execute the prepared statement
             if($insertUser->execute() && $insertPatient->execute()){
