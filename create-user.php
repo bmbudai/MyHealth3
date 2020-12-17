@@ -65,7 +65,7 @@
 
             // $newid = $link->query("SELECT MAX(id)+1 as newid FROM Users")->fetch_object()->newid;
 
-            $insertUser = $link->prepare('insert into Users (id, username, password) values (?,?,?)');
+            $insertUser = $link->prepare('insert into Users (id, username, password, UserTypeId) values (?,?,?,1)');
             $insertUser->bind_param("sss", $id, $param_username, $param_password);
 
             if(isset($middlename) && !empty($middlename)) {

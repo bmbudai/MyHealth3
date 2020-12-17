@@ -10,18 +10,11 @@
     $username = htmlspecialchars($_SESSION["name"]);
     $hideNotLoggedIn = " ";
   }
-
-  if ($_SESSION['usertypeid'] == 1){
-    $displaypatientrecords = "none";
-  }
-  else{
-    $displaypatientrecords = "block";
-  }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<title>Dashboard - MyHealth</title>
+<title>Add Record - MyHealth</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -37,6 +30,17 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </style>
 <body>
 
+<?php
+session_start();
+if ($_SESSION['addRecordFail']==TRUE) {
+  $authFailReason = htmlspecialchars($_SESSION['failReason']);
+  $authFailModalShow = "style='display:block;'";
+  $_SESSION['addRecordFail']=FALSE;
+}
+else {
+  $authFailModalShow = "style='display:none;'";
+}
+?>
 
 <!-- Navbar -->
 <div class="w3-top">
@@ -66,67 +70,96 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 
 <!-- Header -->
 <header class="w3-container color1 w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">Welcome Back, <b><?php echo $username; ?></b>!</h1>
+  <h1 class="w3-margin w3-jumbo">Add A Service Record</h1>
 </header>
 
-<!-- First Grid -->
-<div class="w3-row-padding w3-center w3-margin">
-  <!-- <div class="w3-content"> -->
-    <div class="w3-quarter w3-margin-top">
-      <div class="w3-card-4" onclick="location.href='records.php';" style="cursor: pointer;">
-         <div class=" w3-container w3-hover-light-gray w3-hover-text-green">
-            <h2>Records</h2>
-            <i class="fa fa-receipt fa-9x w3-padding-64 w3-margin-right"></i>
-         </div>
-      </div>
-   </div>
-    <div class="w3-quarter w3-margin-top">
-      <div class="w3-card-4">
-         <div class=" w3-container w3-hover-light-gray w3-hover-text-green">
-            <h2>Prescriptions</h2>
-            <i class="fa fa-pills fa-9x w3-padding-64 w3-margin-right"></i>
-         </div>
-      </div>
-   </div>
-    <div class="w3-quarter w3-margin-top">
-      <div class="w3-card-4" onclick="location.href='enrollment.php';" style="cursor: pointer;">
-         <div class=" w3-container w3-hover-light-gray w3-hover-text-green">
-            <h2>Enroll</h2>
-            <i class="fa fa-hand-holding-medical fa-9x w3-padding-64 w3-margin-right"></i>
-         </div>
-      </div>
-   </div>
-   <div class="w3-quarter w3-margin-top">
-     <div class="w3-card-4" onclick="location.href='patientrecords.php';" style="cursor: pointer; display: <?php echo $displaypatientrecords;?>;">
-        <div class=" w3-container w3-hover-light-gray w3-hover-text-green">
-           <h2>Patient Records</h2>
-           <i class="fa fa-receipt fa-9x w3-padding-64 w3-margin-right"></i>
-        </div>
-     </div>
-  </div>
-     </div>
-  </div>
 
-  <!-- </div> -->
+<!--Modal for if creating a record failed-->
+<div id="authFailModal" class="w3-modal" <?php echo $authFailModalShow;?>>
+  <div class="w3-modal-content w3-animate-zoom w3-card-4">
+    <header class="w3-container color1">
+      <span onclick="document.getElementById('authFailModal').style.display='none'"
+      class="w3-button w3-display-topright">&times;</span>
+      <h2>Failed to Create Record</h2>
+    </header>
+    <div class="w3-container">
+      <p class="w3-xlarge"><?php echo $authFailReason;?></p>
+    </div>
+    <footer class="w3-container color1">
+      <p></p>
+    </footer>
+  </div>
 </div>
 
-<!-- Second Grid -->
-<!-- <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+
+<!-- First Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-    <div class="w3-third w3-center">
-      <i class="fa fa-coffee w3-padding-64 text-color1 w3-margin-right"></i>
+    <div class="w3-container">
+      <div class="w3-card-4">
+        <div class="w3-container color1">
+          <h2>Record Details</h2>
+        </div>
+
+        <form class="w3-container" action="insertRecord.php" method="post">
+          </p>
+          <select class="w3-select" name="patient" required>
+            <option value="" disabled selected>Patient</option>
+            <?php include "patientOptions.php"?>
+          </select>
+          </p>
+          <select class="w3-select" name="provider" required>
+            <option value="" disabled selected>Provider</option>
+            <?php include "providerOptions.php"?>
+          </select>
+          </p>
+          <textarea class="w3-input" placeholder="Service" name="service" rows="1" maxlength="100"></textarea>
+          </p>
+          <input class="w3-input" type="date" name="servicedate" required>
+          <label class="w3-text-grey">Service Date</label></p>
+          </p>
+
+          <div>
+            <div class="w3-quarter w3-row-padding">
+              <input class="w3-input" placeholder="Cost to Insurance" name="inscost"  type="number" required>
+              </p>
+            </div>
+            <div class="w3-quarter">
+              <input class="w3-input" placeholder="Cost to Patient" name="patcost"  type="number" required>
+              </p>
+            </div>
+            <div class="w3-quarter w3-row-padding">
+              <input class="w3-input" placeholder="Insurance Payment" name="inspayment"  type="number" required>
+              </p>
+            </div>
+            <div class="w3-quarter">
+              <input class="w3-input" placeholder="Patient Payment" name="patpayment"  type="number" required>
+              </p>
+            </div>
+          </div>
+
+          <select class="w3-select" name="drug" required>
+            <option value="" disabled selected>Medication Prescribed</option>
+            <?php include "drugOptions.php"?>
+          </select>
+          </p>
+          <p>
+          <button class="w3-button color1 w3-padding-large w3-large w3-margin-top" type="submit">Create Record</button>
+          <a href="patientrecords.php" class="w3-button color1 w3-padding-large w3-large w3-margin-top">Cancel</a>
+        </form>
+      </div>
     </div>
 
-    <div class="w3-twothird">
-      <h1>Lorem Ipsum</h1>
-      <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
-
-      <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
   </div>
-</div> -->
+</div>
+
+
+
+
+
+
+
+
 
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
     <h1 class="w3-margin w3-xlarge">&copy; Copyright 2020, Benjamin Budai and Joshua Tan</h1>
